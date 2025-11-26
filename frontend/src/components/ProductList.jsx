@@ -1,5 +1,6 @@
 // src/components/ProductList.jsx
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { fetchProducts } from '../api'
 
 function ProductList() {
@@ -138,14 +139,34 @@ function ProductList() {
                 boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
               }}
             >
+              {/* Картинка товара */}
               {p.image && (
-                <img
-                  src={p.image}
-                  alt={p.title}
-                  style={{ width: '100%', height: 150, objectFit: 'cover', marginBottom: 8 }}
-                />
+                <Link
+                  to={`/product/${p.id}`}
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                >
+                  <img
+                    src={p.image}
+                    alt={p.title}
+                    style={{
+                      width: '100%',
+                      height: 150,
+                      objectFit: 'cover',
+                      marginBottom: 8,
+                      borderRadius: 4,
+                    }}
+                  />
+                </Link>
               )}
-              <h3 style={{ fontSize: 16, marginBottom: 8 }}>{p.title}</h3>
+
+              {/* Название с ссылкой на страницу товара */}
+              <Link
+                to={`/product/${p.id}`}
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <h3 style={{ fontSize: 16, marginBottom: 8 }}>{p.title}</h3>
+              </Link>
+
               <p style={{ fontSize: 13, minHeight: 40, color: '#555' }}>
                 {p.description}
               </p>
@@ -160,6 +181,19 @@ function ProductList() {
                   Категория: {p.category.name}
                 </p>
               )}
+
+              {/* Кнопка "Подробнее" */}
+              <Link
+                to={`/product/${p.id}`}
+                style={{
+                  display: 'inline-block',
+                  marginTop: 10,
+                  fontSize: 13,
+                  color: '#0077ff',
+                }}
+              >
+                Подробнее →
+              </Link>
             </div>
           ))}
         </div>
@@ -169,39 +203,3 @@ function ProductList() {
 }
 
 export default ProductList
-
-{products.map(p => (
-  <div
-    key={p.id}
-    style={{
-      border: '1px solid #ddd',
-      borderRadius: 8,
-      padding: 16,
-      width: 220,
-      boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-    }}
-  >
-    <Link
-      to={`/product/${p.id}`}
-      style={{ textDecoration: 'none', color: 'inherit' }}
-    >
-      <h3 style={{ fontSize: 16, marginBottom: 8 }}>{p.title}</h3>
-    </Link>
-    <p style={{ fontSize: 13, minHeight: 40, color: '#555' }}>
-      {p.description}
-    </p>
-    <p style={{ fontWeight: 'bold', marginTop: 8 }}>{p.price} ₸</p>
-    {/* остальное как было */}
-    <Link
-      to={`/product/${p.id}`}
-      style={{
-        display: 'inline-block',
-        marginTop: 10,
-        fontSize: 13,
-        color: '#0077ff',
-      }}
-    >
-      Подробнее →
-    </Link>
-  </div>
-))}

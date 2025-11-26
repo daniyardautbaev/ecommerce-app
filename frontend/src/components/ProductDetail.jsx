@@ -1,20 +1,24 @@
-
 // src/components/ProductDetail.jsx
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { fetchProductById } from '../api'
+import { useCart } from '../CartContext'
 
 function ProductDetail() {
   const { id } = useParams()
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [message, setMessage] = useState('')
+
+  const { addToCart } = useCart()
 
   useEffect(() => {
     async function loadProduct() {
       try {
         setLoading(true)
         setError('')
+        setMessage('')
         const data = await fetchProductById(id)
         setProduct(data)
       } catch (err) {
@@ -27,6 +31,13 @@ function ProductDetail() {
 
     loadProduct()
   }, [id])
+
+  function handleAddToCart() {
+    if (!product) return
+    addToCart(product, 1)
+    setMessage('Товар добавлен в корзину')
+    setTimeout(() => setMessage(''), 2000)
+  }
 
   if (loading) {
     return <div style={{ padding: 20 }}>Загрузка товара...</div>
@@ -109,6 +120,12 @@ function ProductDetail() {
           )}
           <p style={{ marginTop: 16 }}>{product.description}</p>
 
+          {message && (
+            <p style={{ marginTop: 10, color: 'green', fontSize: 14 }}>
+              {message}
+            </p>
+          )}
+
           <button
             style={{
               marginTop: 20,
@@ -120,8 +137,7 @@ function ProductDetail() {
               cursor: 'pointer',
               fontSize: 15,
             }}
-            // потом сюда добавим добавление в корзину
-            onClick={() => alert('Пока что просто кнопка 🙂')}
+            onClick={handleAddToCart}
           >
             Добавить в корзину
           </button>
